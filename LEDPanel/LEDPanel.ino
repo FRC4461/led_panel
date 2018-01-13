@@ -19,6 +19,8 @@
 
 // create our matrix based on matrix definition
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
+bool blinking;
+bool isLit;
 
 void setup() {
   // initial FastLED by using CRGB led source from our matrix class
@@ -28,6 +30,8 @@ void setup() {
   FastLED.showColor(CRGB::Blue);
   Serial.begin(115200);
   FastLED.clear(true);
+  blinking = false;
+  isLit = false;
 }
 
 void loop() {
@@ -35,48 +39,66 @@ void loop() {
   uint8_t h;
   int incomingByte;
   int b, d;
-  for (x = 0; x < leds.Size(); x++)
-  {
-    if (Serial.available() > 0) {
-      // read the incoming byte:
-      incomingByte = Serial.read();
-      if (incomingByte == 'b') {
-        b = Serial.parseInt();
-        Serial.println(b);
-        FastLED.setBrightness(b);
-        FastLED.show();
-      }
-      else if (incomingByte == 'm') {
-        FastLED.clear(true);
-        drawMushroom();
-        FastLED.show();
-      }
-      else if (incomingByte == 'n') {
-        FastLED.clear(true);
-        drawFace();
-        FastLED.show();
-      }
-      else if (incomingByte == 'd') {
-        int x = Serial.parseInt();
-        int y = Serial.parseInt();
-        int r = Serial.parseInt();
-        int g = Serial.parseInt();
-        int b = Serial.parseInt();
-        leds.DrawLine(x, y, x, y, CRGB(r, g, b));
-        FastLED.show();
-      }
-      else if (incomingByte == 'c') {
-        FastLED.clear(true);
-        FastLED.show();
-      }
-      else if (incomingByte == 'h') {
-        Serial.println(" b <brightness> - changes brightness ");
-        Serial.println(" m - draws Mushroom ");
-        Serial.println(" c - clears panel ");
-        Serial.println(" n - draws face ");
-        Serial.println(" d <x,y,r,g,b> - makes LED ");
-      }
+
+  if (Serial.available() > 0) {
+    // read the incoming byte:
+    incomingByte = Serial.read();
+    if (incomingByte == 'b') {
+      b = Serial.parseInt();
+      Serial.println(b);
+      FastLED.setBrightness(b);
+      FastLED.show();
     }
+    else if (incomingByte == 'm') {
+      FastLED.clear(true);
+      drawMushroom();
+      FastLED.show();
+    }
+    else if (incomingByte == 'n') {
+      FastLED.clear(true);
+      drawFace();
+      FastLED.show();
+    }
+    else if (incomingByte == 'd') {
+      int x = Serial.parseInt();
+      int y = Serial.parseInt();
+      int r = Serial.parseInt();
+      int g = Serial.parseInt();
+      int b = Serial.parseInt();
+      leds.DrawLine(x, y, x, y, CRGB(r, g, b));
+      FastLED.show();
+    }
+    else if (incomingByte == 'c') {
+      FastLED.clear(true);
+      FastLED.show();
+    }
+    else if (incomingByte == 'h') {
+      Serial.println(" b <brightness> - changes brightness ");
+      Serial.println(" m - draws Mushroom ");
+      Serial.println(" c - clears panel ");
+      Serial.println(" n - draws face ");
+      Serial.println(" d <x,y,r,g,b> - makes LED ");
+    }
+    else if (incomingByte == 't') {
+      FastLED.clear(true);
+      drawTeamLogo();
+      FastLED.show();
+    }
+    else if (incomingByte == 'p') {
+      blinking = !blinking;
+    }
+  } 
+  if (blinking) {
+    CRGB color;
+    if (isLit) {
+      color = CRGB (255,255,255);
+    } else {
+      color = CRGB ( 0,0,0);  
+    }
+    leds.DrawLine( 5, 5, 5, 5, color);
+    isLit = !isLit; 
+    FastLED.show();
+    FastLED.delay(500); 
   }
 }
 
