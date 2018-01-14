@@ -14,24 +14,45 @@
 #define MATRIX_TYPE         VERTICAL_ZIGZAG_MATRIX
 #define MATRIX_SIZE         (MATRIX_WIDTH*MATRIX_HEIGHT)
 #define NUMPIXELS           MATRIX_SIZE
-#define BRIGHTNESS          20
+#define BRIGHTNESS          5
 
 
 // create our matrix based on matrix definition
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 bool blinking;
 bool isLit;
+bool isFaceOn;
 
+
+void drawLeftEye(CRGB color) {
+  leds.DrawCircle(5, 6, 1, color);
+}
+
+void drawRightEye(CRGB color) {
+  leds.DrawCircle(10, 6, 1, color);
+}
+
+void drawClosedLeftEye(CRGB color) {
+  leds.DrawLine(4, 6, 6, 6, color);
+}
+
+
+
+
+void clear() {
+  FastLED.clear();
+  blinking = false;
+  isLit = false;
+  isFaceOn = false;
+}
 void setup() {
   // initial FastLED by using CRGB led source from our matrix class
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds[0], leds.Size()).setCorrection(TypicalSMD5050);
   FastLED.setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(BRIGHTNESS);
-  FastLED.showColor(CRGB::Blue);
+  FastLED.showColor(CRGB::Black);
   Serial.begin(115200);
-  FastLED.clear(true);
-  blinking = false;
-  isLit = false;
+  clear();
 }
 
 void loop() {
@@ -57,6 +78,7 @@ void loop() {
     else if (incomingByte == 'n') {
       FastLED.clear(true);
       drawFace();
+      isFaceOn = true;
       FastLED.show();
     }
     else if (incomingByte == 'd') {
@@ -69,8 +91,7 @@ void loop() {
       FastLED.show();
     }
     else if (incomingByte == 'c') {
-      FastLED.clear(true);
-      FastLED.show();
+      clear();
     }
     else if (incomingByte == 'h') {
       Serial.println(" b <brightness> - changes brightness ");
@@ -87,18 +108,40 @@ void loop() {
     else if (incomingByte == 'p') {
       blinking = !blinking;
     }
-  } 
+    else if (incomingByte = 'c') {
+
+    }
+  }
   if (blinking) {
     CRGB color;
-    if (isLit) {
-      color = CRGB (255,255,255);
+
+    if (isFaceOn)
+    {
+      if (isLit) {
+        //eye is closed
+        drawLeftEye(CRGB::Black);
+        drawClosedLeftEye(CRGB::Blue);
+      } else {
+        //eye is open
+        drawClosedLeftEye(CRGB::Black);
+        drawLeftEye(CRGB::Blue);
+      }
+
     } else {
-      color = CRGB ( 0,0,0);  
+      if (isLit) {
+        color = CRGB::Blue;
+
+      } else {
+        color = CRGB ( 0, 0, 0);
+      }
+      leds.DrawLine( 5, 5, 5, 5, color);
     }
-    leds.DrawLine( 5, 5, 5, 5, color);
-    isLit = !isLit; 
+
+    isLit = !isLit;
     FastLED.show();
-    FastLED.delay(500); 
+    FastLED.delay(500);
+
+
   }
 }
 
@@ -122,9 +165,12 @@ void drawMushroom() {
 void drawFace() {
   int16_t x = leds.Width() / 2;
   int16_t y = leds.Height() / 2;
+  //head
   leds.DrawCircle(x, y, 6, CRGB::Purple);
-  leds.DrawCircle(5, 6, 1, CRGB::Blue);
-  leds.DrawCircle(10, 6, 1, CRGB::Blue);
+  drawLeftEye(CRGB::Blue);
+  //Right eye
+  drawRightEye(CRGB::Blue);
+  //mouth
   leds.DrawRectangle(5, 10, 11, 11, CRGB::Green);
 }
 
