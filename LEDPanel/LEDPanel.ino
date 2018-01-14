@@ -36,8 +36,9 @@ void drawClosedLeftEye(CRGB color) {
   leds.DrawLine(4, 6, 6, 6, color);
 }
 
-
-
+void drawClosedRightEye(CRGB color) {
+  leds.DrawLine(9, 6, 11, 6, color);
+}
 
 void clear() {
   FastLED.clear();
@@ -118,13 +119,19 @@ void loop() {
     if (isFaceOn)
     {
       if (isLit) {
-        //eye is closed
+        // left eye is closed, right eye is open
         drawLeftEye(CRGB::Black);
         drawClosedLeftEye(CRGB::Blue);
+        
+        drawClosedRightEye(CRGB::Black);
+        drawRightEye(CRGB::Blue);
       } else {
         //eye is open
         drawClosedLeftEye(CRGB::Black);
         drawLeftEye(CRGB::Blue);
+        drawRightEye(CRGB::Black);
+        drawClosedRightEye(CRGB::Blue);
+        
       }
 
     } else {
