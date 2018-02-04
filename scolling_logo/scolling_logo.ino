@@ -24,6 +24,13 @@ bool teamLogo;
 bool isLit;
 bool isFaceOn;
 int timeToRestartTheScroll = xOne1;
+int xFour1;
+int xFour2;
+int xSix1;
+int xSix2;
+int xOtherFour1;
+int xOtherFour2 ;
+int xOne1;
 
 
 void drawLeftEye(CRGB color) {
@@ -47,6 +54,14 @@ void clear() {
   blinking = false;
   isLit = false;
   isFaceOn = false;
+  timeToRestartTheScroll = xOne1;
+  xFour1 = 15;
+  xFour2 = xFour1 + 2;
+  xSix1 = xOtherFour1 + 4;
+  xSix2 = xOtherFour2 + 4;
+  xOtherFour1 = xFour1 + 4;
+  xOtherFour2 = xFour2 + 4;
+  xOne1 = xSix1 + 4;
 }
 void setup() {
   // initial FastLED by using CRGB led source from our matrix class
@@ -56,6 +71,7 @@ void setup() {
   FastLED.showColor(CRGB::Black);
   Serial.begin(115200);
   clear();
+
 }
 
 void loop() {
@@ -121,24 +137,17 @@ void loop() {
   }
   if (teamLogo) {
     //number locations
-    if (timeToRestartTheScroll > 0) {
-      int xFour1 = 15;
-      int xFour2 = xFour1 + 2;
-      int xSix1 = xOtherFour1 + 4;
-      int xSix2 = xOtherFour2 + 4;
-      int xOtherFour1 = xFour1 + 4;
-      int xOtherFour2 = xFour2 + 4;
-      int xOne1 = xSix1 + 4;
+    if (xOne1 > 0) {
       drawFour ();
       drawFour2 ();
       drawSix ();
       drawOne ();
       drawBarriers ();
       FastLED.show();
-      xFour1--; 
-      
-    }else {
-      
+      xFour1--;
+
+    } else {
+      clear();
     }
 
   }
