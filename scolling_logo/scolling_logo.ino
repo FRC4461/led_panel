@@ -23,6 +23,7 @@ bool blinking;
 bool teamLogo;
 bool isLit;
 bool isFaceOn;
+int xOne1;
 int timeToRestartTheScroll = xOne1;
 int xFour1;
 int xFour2;
@@ -30,7 +31,7 @@ int xSix1;
 int xSix2;
 int xOtherFour1;
 int xOtherFour2 ;
-int xOne1;
+
 
 
 void drawLeftEye(CRGB color) {
@@ -110,7 +111,7 @@ void loop() {
       FastLED.show();
     }
     else if (incomingByte == 'c') {
-      clear();
+      FastLED.clear();
     }
     else if (incomingByte == 'h') {
       Serial.println(" b <brightness> - changes brightness ");
@@ -121,16 +122,14 @@ void loop() {
     }
     else if (incomingByte == 't') {
       FastLED.clear(true);
-      drawTeamLogo();
+      //drawTeamLogo();
       FastLED.show();
     }
     else if (incomingByte == 'p') {
       blinking = !blinking;
     }
-    else if (incomingByte = 'c') {
-
-    }
-    else if (incomingByte = 'l') {
+   
+    else if (incomingByte == 'l') {
       FastLED.clear(true);
       teamLogo = !teamLogo;
     }
@@ -138,16 +137,18 @@ void loop() {
   if (teamLogo) {
     //number locations
     if (xOne1 > 0) {
-      drawFour ();
+ FastLED.clear(true); 
+ 
+      drawFour1 ();
       drawFour2 ();
       drawSix ();
       drawOne ();
       drawBarriers ();
-      FastLED.show();
       xFour1--;
+    FastLED.show();
+    FastLED.delay(500);
 
-    } else {
-      clear();
+ 
     }
 
   }
