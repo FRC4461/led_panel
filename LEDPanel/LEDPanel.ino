@@ -1,5 +1,6 @@
 #include <FastLED.h>
 #include <LEDMatrix.h>
+#include <FastLED_GFX.h>
 
 // Change the next defines to match your matrix type and size
 #define DATA_PIN            5
@@ -50,10 +51,9 @@ void setup() {
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds[0], leds.Size()).setCorrection(TypicalSMD5050);
   FastLED.setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(BRIGHTNESS);
-  FastLED.showColor(CRGB::Pink);
+  FastLED.showColor(CRGB::Black);
   Serial.begin(115200);
   clear();
-
 }
 
 void loop() {
@@ -122,7 +122,7 @@ void loop() {
         // left eye is closed, right eye is open
         drawLeftEye(CRGB::Black);
         drawClosedLeftEye(CRGB::Blue);
-
+        
         drawClosedRightEye(CRGB::Black);
         drawRightEye(CRGB::Blue);
       } else {
@@ -131,7 +131,7 @@ void loop() {
         drawLeftEye(CRGB::Blue);
         drawRightEye(CRGB::Black);
         drawClosedRightEye(CRGB::Blue);
-
+        
       }
 
     } else {
@@ -141,7 +141,7 @@ void loop() {
       } else {
         color = CRGB ( 0, 0, 0);
       }
-      leds.DrawCircle( 8, 8, 7, color);
+      leds.DrawLine( 5, 5, 5, 5, color);
     }
 
     isLit = !isLit;
@@ -157,12 +157,12 @@ void drawMushroom() {
   leds.DrawFilledCircle(8, 6, 7, CRGB(200, 0, 0));
   //Draw white circle thing
   leds.DrawFilledCircle(8, 5, leds.Width() / 4, CRGB(100, 100, 100));
-  //DrawFace oubgtline
+  //DrawFace outline
   leds.DrawFilledRectangle(5 , 12, 11, 15, CRGB(250, 160, 110));
   //Draw Eyes
   leds.DrawLine(7, 13, 7, 14, CRGB::Black);
   leds.DrawLine(9, 13, 9, 14, CRGB::Black);
-  //Draw White part \n helmet
+  //Draw White part in helmet
   leds.DrawLine(1, 4, 1, 8, CRGB::White);
   leds.DrawLine(2, 2, 2, 10, CRGB::White);
   leds.DrawLine(15, 4, 15, 8, CRGB::White);
@@ -209,16 +209,9 @@ void drawNotObject () {
 
 void drawTeamLogo () {
   leds.DrawLine(0, 0, 0, 7, CRGB:: White);
-  leds.DrawLine(1, 7, 3, 7, CRGB:: White);
+  leds.DrawLine(0, 7, 3, 7, CRGB:: White);
   leds.DrawLine(3, 0, 3, 15, CRGB:: White);
   leds.DrawLine(5, 0, 0, 7, CRGB:: Black);
   leds.DrawLine(5, 7, 8, 7, CRGB:: Black);
   leds.DrawLine(8, 0, 8, 15, CRGB:: Black);
 }
-
-void drawNumberFour () {
-  leds.DrawLine (2, 4, 2, 8, CRGB:: White);
-  leds.DrawLine (2, 8, 5, 8, CRGB::White);
-  leds.DrawLine (5, 4, 5, 11, CRGB::White);
-}
-
